@@ -1,9 +1,9 @@
-// src/app/cozinha/page.tsx
+// src/app/dashboard/cozinha/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './cozinha.module.css';
-
 type OrderItem = {
   _id: string;
   quantidade: number;
@@ -25,6 +25,7 @@ export default function CozinhaPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState<'Recebido' | 'Em Preparo' | 'Entregue'>('Recebido');
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -61,12 +62,18 @@ export default function CozinhaPage() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
+
   const filteredOrders = orders.filter(order => order.status === activeTab);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>👨‍🍳 Tela da Cozinha</h1>
+        <h1 className={styles.title}>Tela da Cozinha</h1>
+        <button className={styles.logout} onClick={handleLogout}>Sair</button>
       </div>
 
       <div className={styles.tabs}>
