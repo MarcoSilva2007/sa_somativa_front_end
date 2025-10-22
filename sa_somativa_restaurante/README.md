@@ -43,11 +43,46 @@ O sistema substitui o processo manual de anotação de pedidos em papel por uma 
 
 ---
 
-## 🧩 Diagramas
+## 🧰 Análise de Recursos
 
-### Diagrama de Classes
+### Recursos Humanos
+- **Desenvolvedor Full-Stack (eu)**: responsável por todo o ciclo de desenvolvimento (frontend, backend, banco de dados, testes).
+- **Cliente (Pequeno Bistrô Sabor Local)**: fornece requisitos, valida funcionalidades e testa o MVP.
 
-### Casos de Uso:
+### Recursos Tecnológicos
+- **Frontend**: Next.js (App Router), React, CSS  
+- **Backend**: Next.js API Routes, Node.js  
+- **Banco de Dados**: MongoDB (Mongoose)  
+- **Autenticação**: JWT (JSON Web Tokens) + Bcrypt (hash de senhas)  
+- **Ambiente de Desenvolvimento**: VS Code, Git, npm/yarn 
+- **Infraestrutura**: Execução local (localhost)
+
+### Recursos de Infraestrutura
+- Computador com acesso à internet 
+- MongoDB
+- Node.js v18+ instalado  
+
+### Ferramentas de Apoio
+- **Mermaid Live Editor**: para validação e visualização de diagramas   
+- **Figma**: para criação de protótipos visuais
+---
+
+## ⚠️ Análise de Riscos
+
+| Risco | Impacto | Probabilidade | Mitigação |
+|-------|--------|---------------|----------|
+| **Falta de internet no restaurante** | Alto | Média | O sistema será desenvolvido para funcionar **online**, mas com mensagens claras de erro. Futuramente, pode-se explorar modo offline com cache local (fora do MVP). |
+| **Usuários não se adaptarem à interface** | Médio | Alta | Interface será **simples, intuitiva e focada na tarefa** (ex: botões grandes, fluxo linear). Testes com usuários reais serão feitos no MVP. |
+| **Perda de dados por falha no banco** | Alto | Baixa | Utilização do **MongoDB com persistência em disco**. Recomenda-se backup manual periódico (fora do escopo do MVP). |
+| **Vazamento de credenciais de login** | Alto | Baixa | Senhas armazenadas com **bcrypt (hash seguro)**. JWT com tempo de expiração curto (1 dia) e sem armazenamento em cookies persistentes. |
+| **Desempenho lento com muitos pedidos** | Médio | Média | Otimização de consultas com **índices no MongoDB** e paginação futura (não necessária no MVP, pois volume é pequeno). |
+| **Erros de cálculo no valor total do pedido** | Alto | Baixa | Cálculo feito **exclusivamente no backend**, com validação de preços no momento da criação do pedido. |
+| **Confusão entre papéis de usuário** | Médio | Média | Validação rigorosa de **roles (papéis)** em todas as rotas de API e redirecionamento automático no frontend conforme o papel. |
+
+---
+## 🧩 Diagramas:
+
+### Diagrama de Classes:
 
 ```mermaid
 classDiagram
@@ -90,32 +125,74 @@ classDiagram
 
 ---
 
-### Caso de Fluxo/Navegação
+### Diagrama de Fluxo/Navegação
 ```mermaid
 graph TD
-    A[Login] --> B{Autenticado?}
-    B -- Sim --> C[Dashboard]
-    B -- Não --> A
+    A[Login] -->|Credenciais validas| B[Dashboard]
+    A -->|Credenciais invalidas| A
 
-    C --> D{Papel = Gerente?}
-    D -- Sim --> E[Gerenciar Cardápio]
-    D -- Não --> F{Papel = Garçom?}
-    F -- Sim --> G[Criar Pedido]
-    F -- Não --> H[Ver Pedidos da Cozinha]
+    B -->|Papel: Gerente| C[Gerenciar Cardapio]
+    B -->|Papel: Garcom| D[Criar Pedido]
+    B -->|Papel: Cozinha| E[Tela da Cozinha]
 
-    E --> I[CRUD de Itens]
-    I --> J[Voltar ao Dashboard]
+    C -->|Adicionar/Editar/Excluir| C
+    C -->|Voltar| B
 
-    G --> K[Selecionar Mesa + Itens]
-    K --> L[Calcular Total + Enviar para Cozinha]
-    L --> M[Fechar Conta ou Voltar]
+    D -->|Selecionar Mesa + Itens| F[Visualizar Pedido]
+    F -->|Enviar para Cozinha| G[Pedido Enviado!]
+    G -->|Fechar Conta| H[Conta Fechada - Status: Entregue]
+    H --> B
+    G -->|Novo Pedido| D
+    G -->|Voltar ao Dashboard| B
 
-    H --> N[Lista de Pedidos com Status “Recebido”]
-    N --> O[Atualizar Status para “Em Preparo”]
-    O --> P[Voltar à Lista]
+    E -->|Pedidos com status “Recebido”| E
+    E -->|Clicar em “Iniciar Preparo”| I[Status: Em Preparo]
+    I -->|Atualizado com sucesso| E
 
-    M --> C
-    J --> C
-    P --> H
+```
+
+---
+
+### Diagrama de Uso
+
+```mermaid
+flowchart LR
+    subgraph Atores
+        Garcom["Garçom"]
+        Gerente["Gerente"]
+        Cozinheiro["Cozinheiro"]
+    end
+
+    subgraph Funcionalidades
+        FP1["Criar Novo Pedido"]
+        FP2["Adicionar Itens ao Pedido"]
+        FP3["Fechar Conta"]
+        FP4["Visualizar Pedidos Próprios"]
+
+        FC1["Cadastrar Item no Cardápio"]
+        FC2["Editar Item do Cardápio"]
+        FC3["Excluir Item do Cardápio"]
+        FC4["Listar Todos os Itens"]
+        FC5["Visualizar Faturamento Total"]
+        FC6["Visualizar Todos os Pedidos"]
+
+        FK1["Visualizar Pedidos Recebidos"]
+        FK2["Atualizar Status para Em Preparo"]
+    end
+
+    Garcom --> FP1
+    Garcom --> FP2
+    Garcom --> FP3
+    Garcom --> FP4
+
+    Gerente --> FC1
+    Gerente --> FC2
+    Gerente --> FC3
+    Gerente --> FC4
+    Gerente --> FC5
+    Gerente --> FC6
+
+    Cozinheiro --> FK1
+    Cozinheiro --> FK2
 
 ```
