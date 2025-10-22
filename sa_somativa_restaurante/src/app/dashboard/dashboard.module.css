@@ -1,0 +1,95 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.user-info {
+  text-align: right;
+  color: #4a5568;
+  font-size: 0.9rem;
+
+  .role {
+    display: block;
+    font-weight: 600;
+    color: #2b6cb0;
+  }
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    margin: 0.5rem 0 1rem;
+    color: #2d3748;
+  }
+
+  p {
+    color: #718096;
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .btn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #3182ce;
+    }
+  }
+}
+
+.gerente .btn { background: #48bb78; &:hover { background: #38a169; } }
+.garcom .btn { background: #ed8936; &:hover { background: #dd6b20; } }
+.cozinha .btn { background: #e53e3e; &:hover { background: #c53030; } }
+
+.logout {
+  margin-top: 2rem;
+  text-align: center;
+  color: #e53e3e;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+}
