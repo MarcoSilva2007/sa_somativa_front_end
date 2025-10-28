@@ -1,9 +1,9 @@
-// src/app/dashboard/cozinha/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './cozinha.module.css';
+
 type OrderItem = {
   _id: string;
   quantidade: number;
@@ -25,38 +25,79 @@ export default function CozinhaPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState<'Recebido' | 'Em Preparo' | 'Entregue'>('Recebido');
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<'cozinha' | 'gerente' | null>(null);
   const router = useRouter();
 
+  // Função para buscar pedidos
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/pedido');
-      const data = await res.json();
-      // Ordena por createdAt (mais antigo primeiro)
-      const sorted = data.sort((a: Order, b: Order) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      // 🔑 Só inclui o header se você MANTER autenticação no listar()
+      // Se você REMOVER a autenticação do listar(), pode apagar o headers inteiro
+      const token = localStorage.getItem('token');
+      const headers: HeadersInit = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const res = await fetch('/api/pedido', { headers });
+      
+      if (!res.ok) {
+        throw new Error(`Erro ${res.status}`);
+      }
+
+      const data: Order[] = await res.json();
+      const sorted = data.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       setOrders(sorted);
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao buscar pedidos:', err);
+      // Opcional: redirecionar se não autorizado
+      // router.push('/login');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const papel = payload.papel as 'cozinha' | 'gerente' | 'garcom';
+      if (papel !== 'cozinha' && papel !== 'gerente') {
+        router.push('/dashboard');
+        return;
+      }
+      setUserRole(papel);
+    } catch (e) {
+      localStorage.removeItem('token');
+      router.push('/login');
+    }
+
+    // Carrega pedidos imediatamente
     fetchOrders();
-    // Atualiza a cada 10 segundos (opcional, mas útil na cozinha)
-    const interval = setInterval(fetchOrders, 10000);
+
+    // Atualiza a cada 8 segundos
+    const interval = setInterval(fetchOrders, 8000);
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
 
   const updateStatus = async (id: string, newStatus: 'Em Preparo' | 'Entregue') => {
     try {
+      const token = localStorage.getItem('token');
       await fetch(`/api/pedido/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ status: newStatus })
       });
-      fetchOrders(); // atualiza a lista
+      setOrders(orders.map(o => o._id === id ? { ...o, status: newStatus } : o));
     } catch (err) {
       console.error('Erro ao atualizar status:', err);
     }
@@ -66,6 +107,10 @@ export default function CozinhaPage() {
     localStorage.removeItem('token');
     router.push('/login');
   };
+
+  if (!userRole) {
+    return <div>Carregando...</div>;
+  }
 
   const filteredOrders = orders.filter(order => order.status === activeTab);
 
@@ -124,7 +169,7 @@ export default function CozinhaPage() {
                 ))}
               </ul>
 
-              <span className={`${styles.status} ${styles[order.status.toLowerCase() as keyof typeof styles]}`}>
+              <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
                 {order.status}
               </span>
 

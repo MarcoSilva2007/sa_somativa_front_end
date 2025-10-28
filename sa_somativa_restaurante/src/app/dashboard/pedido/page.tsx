@@ -1,4 +1,3 @@
-// src/app/dashboard/pedido/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -27,11 +26,39 @@ export default function PedidoPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const papel = payload.papel as 'gerente' | 'garcom' | 'cozinha';
+      if (papel !== 'garcom' && papel !== 'gerente') {
+        router.push('/dashboard');
+        return;
+      }
+    } catch (e) {
+      localStorage.removeItem("token");
+      router.push("/login");
+      return;
+    }
+
     const fetchCardapio = async () => {
-      const res = await fetch('/api/itemcardapio');
-      const data = await res.json();
-      setCardapio(data);
+      try {
+        const res = await fetch('/api/itemcardapio', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const data = await res.json();
+        setCardapio(data);
+      } catch (err) {
+        console.error(err);
+      }
     };
+
     fetchCardapio();
   }, []);
 
@@ -94,7 +121,8 @@ export default function PedidoPage() {
   };
 
   return (
-    <div className={styles.container}>
+    // ✅ SÓ MUDAMOS AQUI: envolvemos tudo com .pageWrapper
+    <div className={styles.pageWrapper}>
       <div className={styles.header}>
         <h1 className={styles.title}>Criar Pedido</h1>
         <button className={styles.logout} onClick={handleLogout}>Sair</button>
@@ -113,7 +141,6 @@ export default function PedidoPage() {
           </div>
 
           <div className={styles.field}>
-            <label>Item:</label>
             <select value={itemSelecionado} onChange={e => setItemSelecionado(e.target.value)}>
               <option value="">Selecione um item</option>
               {cardapio.map(item => (

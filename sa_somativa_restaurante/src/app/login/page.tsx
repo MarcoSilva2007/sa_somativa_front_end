@@ -1,6 +1,9 @@
+// src/app/login/page.tsx
 'use client';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import styles from './login.module.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -25,14 +28,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '400px', margin: '0 auto' }}>
-      <h1>Login</h1>
-      {erro && <p style={{ color: 'red' }}>{erro}</p>}
-      <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Senha" value={senha} onChange={e => setSenha(e.target.value)} required />
-        <button type="submit">Entrar</button>
-      </form>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Login</h1>
+        {erro && <p className={styles.error}>{erro}</p>}
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="senha">Senha</label>
+            <input
+              id="senha"
+              type="password"
+              value={senha}
+              onChange={e => setSenha(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+          <button type="submit" className={styles.btnSubmit}>Entrar</button>
+        </form>
+      </div>
     </div>
   );
 }

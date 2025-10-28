@@ -1,4 +1,4 @@
-// scripts/creategarcomUser.ts
+// scripts/createAdminUser.ts
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
@@ -29,23 +29,23 @@ const UsuarioSchema = new mongoose.Schema({
 
 const Usuario = mongoose.models.Usuario || mongoose.model('Usuario', UsuarioSchema);
 
-// Cria o garcom
+// Cria o cozinheiro
 const senhaHash = await bcrypt.hash('123456', 12);
-const garcomData = {
-  nome: 'Garcom1',
-  email: 'garcom@marco.com',
+const adminData = {
+  nome: 'Cozinheiro',
+  email: 'cozinha@marco.com',
   senha: senhaHash,
-  papel: 'garcom'
+  papel: 'cozinha'
 };
 
 try {
-  await Usuario.create(garcomData);
-  console.log('✅ Usuário garçom criado com sucesso!');
+  await Usuario.create(adminData);
+  console.log('✅ Usuário cozinheiro criado com sucesso!');
 } catch (error: any) {
   if (error.code === 11000) {
-    console.log('⚠️ Usuário garçom já existe.');
+    console.log('⚠️ Usuário cozinheiro já existe.');
   } else {
-    console.error('❌ Erro ao criar garçom:', error.message);
+    console.error('❌ Erro ao criar cozinheiro:', error.message);
   }
 }
 

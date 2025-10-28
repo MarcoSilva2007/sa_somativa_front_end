@@ -53,7 +53,7 @@ O sistema substitui o processo manual de anotação de pedidos em papel por uma 
 - **Frontend**: Next.js (App Router), React, CSS  
 - **Backend**: Next.js API Routes, Node.js  
 - **Banco de Dados**: MongoDB (Mongoose)  
-- **Autenticação**: JWT (JSON Web Tokens) + Bcrypt (hash de senhas)  
+- **Autenticação**: JWT (JSON Web Tokens) + Bcrypt (hash de senhas)
 - **Ambiente de Desenvolvimento**: VS Code, Git, npm 
 - **Infraestrutura**: Execução local (localhost)
 

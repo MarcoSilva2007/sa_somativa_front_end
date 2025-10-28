@@ -1,13 +1,16 @@
 import { NextRequest } from 'next/server';
-import { listar, criar } from '@/controllers/ItemCardapioController';
+import { listar, criar } from '@/controllers/PedidoController';
 import connectDB from '@/services/mongodb';
+import { comPermissao } from '@/lib/auth';
 
-export async function GET() {
+// GET - Somente COZINHA e GERENTE podem listar pedidos
+export const GET = comPermissao(['cozinha', 'gerente'], async (req: NextRequest) => {
   await connectDB();
   return listar();
-}
+});
 
-export async function POST(req: NextRequest) {
+// POST - Somente GARÇOM pode criar pedidos
+export const POST = comPermissao(['garcom'], async (req: NextRequest) => {
   await connectDB();
   return criar(req);
-}
+});

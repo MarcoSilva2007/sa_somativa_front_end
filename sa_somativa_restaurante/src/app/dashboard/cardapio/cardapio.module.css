@@ -1,3 +1,5 @@
+/* === CARDÁPIO MODULE === */
+
 .container {
   min-height: 100vh;
   padding: 2rem;
@@ -12,121 +14,226 @@
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #e0e0e0;
-
-  .title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #2d3748;
-  }
-
-  .logout {
-    color: #e53e3e;
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 500;
-  }
 }
 
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+}
+
+.logout {
+  padding: 0.6rem 1.2rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logout:hover {
+  opacity: 0.9;
+}
+
+/* Card Principal */
 .card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Botão Novo Item */
+.btn {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
   margin-bottom: 1.5rem;
 }
 
-.item-list {
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Lista de Itens */
+.itemList {
   list-style: none;
   padding: 0;
-
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid #e2e8f0;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .info {
-      flex: 1;
-    }
-
-    .name {
-      font-weight: 600;
-      color: #2d3748;
-    }
-
-    .price {
-      color: #48bb78;
-      font-weight: 600;
-    }
-
-    .category {
-      color: #718096;
-      font-size: 0.9rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: 0.8rem;
-
-      button {
-        padding: 0.4rem 0.8rem;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-
-        &.edit {
-          background: #4299e1;
-          color: white;
-
-          &:hover {
-            background: #3182ce;
-          }
-        }
-
-        &.delete {
-          background: #e53e3e;
-          color: white;
-
-          &:hover {
-            background: #c53030;
-          }
-        }
-      }
-    }
-  }
+  margin: 0;
 }
+
+.itemList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s;
+}
+
+.itemList li:hover {
+  background-color: #f8f9fa;
+}
+
+.itemList li:last-child {
+  border-bottom: none;
+}
+
+.info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.name {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1.05rem;
+}
+
+.category {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.price {
+  flex: 0 0 120px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #28a745;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.edit:hover {
+  opacity: 0.9;
+}
+
+.delete {
+  padding: 0.5rem 1rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.delete:hover {
+  opacity: 0.9;
+}
+
+/* === FORMULÁRIO (Novo/Editar Item) === */
 
 .form {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.95rem;
+}
+
+.field input,
+.field select {
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.buttonGroup {
+  display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
+}
 
-  input, select {
-    padding: 0.6rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-  }
+.btnCancel {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
 
-  .btn {
-    background: #48bb78;
-    color: white;
-    border: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+.btnCancel:hover:not(:disabled) {
+  opacity: 0.9;
+}
 
-    &:hover {
-      background: #38a169;
-    }
-  }
+.btnSubmit {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btnSubmit:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btnCancel:disabled,
+.btnSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
